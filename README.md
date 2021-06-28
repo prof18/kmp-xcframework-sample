@@ -1,5 +1,5 @@
-# KMP FatFramework Test Project
+# Kotlin Multiplatform XCFramework Sample
 
-Just a simple Kotlin Multiplatform sample project to test the [KMP FatFramework Cocoa Gradle Plugin](https://github.com/prof18/kmp-fatframework-cocoa)
+Just a simple Kotlin Multiplatform sample project that shows how to build an XCFramework. 
 
 
