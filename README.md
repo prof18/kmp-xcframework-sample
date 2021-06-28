@@ -1,4 +1,4 @@
-# KMP FatFramework Test Project
+# KMP XCFramework Sample 
 
 A simple Kotlin Multiplatform sample project to show how to build an [XCFramework](https://help.apple.com/xcode/mac/11.4/#/dev544efab96)
 
