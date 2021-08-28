@@ -1,27 +1,33 @@
 import java.util.*
 import java.text.SimpleDateFormat
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+
 
 plugins {
-    kotlin("multiplatform") version "1.5.10"
+    kotlin("multiplatform") version "1.5.30"
     id("com.android.library")
 }
 
 val libName = "LibraryName"
-val libVersionName = "1.0.1"
+val libVersionName = "1.0.2"
 group = "com.prof18"
 version = libVersionName
 
 repositories {
     google()
-    jcenter()
     mavenCentral()
 }
 
 kotlin {
+    val xcFramework = XCFramework(libName)
+
     android()
     ios {
-        binaries.framework(libName)
+        binaries.framework(libName) {
+            xcFramework.add(this)
+        }
     }
+
     sourceSets {
         val commonMain by getting
         val commonTest by getting {
@@ -46,80 +52,6 @@ kotlin {
     }
 
     tasks {
-        register("buildDebugXCFramework", Exec::class.java) {
-            description = "Create a Debug XCFramework"
-
-            dependsOn("link${libName}DebugFrameworkIosArm64")
-            dependsOn("link${libName}DebugFrameworkIosX64")
-
-            val arm64FrameworkPath = "$rootDir/build/bin/iosArm64/${libName}DebugFramework/${libName}.framework"
-            val arm64DebugSymbolsPath = "$rootDir/build/bin/iosArm64/${libName}DebugFramework/${libName}.framework.dSYM"
-
-            val x64FrameworkPath = "$rootDir/build/bin/iosX64/${libName}DebugFramework/${libName}.framework"
-            val x64DebugSymbolsPath = "$rootDir/build/bin/iosX64/${libName}DebugFramework/${libName}.framework.dSYM"
-
-            val xcFrameworkDest = File("$rootDir/../kmp-xcframework-dest/$libName.xcframework")
-            executable = "xcodebuild"
-            args(mutableListOf<String>().apply {
-                add("-create-xcframework")
-                add("-output")
-                add(xcFrameworkDest.path)
-
-                // Real Device
-                add("-framework")
-                add(arm64FrameworkPath)
-                add("-debug-symbols")
-                add(arm64DebugSymbolsPath)
-
-                // Simulator
-                add("-framework")
-                add(x64FrameworkPath)
-                add("-debug-symbols")
-                add(x64DebugSymbolsPath)
-            })
-
-            doFirst {
-                xcFrameworkDest.deleteRecursively()
-            }
-        }
-
-        register("buildReleaseXCFramework", Exec::class.java) {
-            description = "Create a Release XCFramework"
-
-            dependsOn("link${libName}ReleaseFrameworkIosArm64")
-            dependsOn("link${libName}ReleaseFrameworkIosX64")
-
-            val arm64FrameworkPath = "$rootDir/build/bin/iosArm64/${libName}ReleaseFramework/${libName}.framework"
-            val arm64DebugSymbolsPath =
-                "$rootDir/build/bin/iosArm64/${libName}ReleaseFramework/${libName}.framework.dSYM"
-
-            val x64FrameworkPath = "$rootDir/build/bin/iosX64/${libName}ReleaseFramework/${libName}.framework"
-            val x64DebugSymbolsPath = "$rootDir/build/bin/iosX64/${libName}ReleaseFramework/${libName}.framework.dSYM"
-
-            val xcFrameworkDest = File("$rootDir/../kmp-xcframework-dest/$libName.xcframework")
-            executable = "xcodebuild"
-            args(mutableListOf<String>().apply {
-                add("-create-xcframework")
-                add("-output")
-                add(xcFrameworkDest.path)
-
-                // Real Device
-                add("-framework")
-                add(arm64FrameworkPath)
-                add("-debug-symbols")
-                add(arm64DebugSymbolsPath)
-
-                // Simulator
-                add("-framework")
-                add(x64FrameworkPath)
-                add("-debug-symbols")
-                add(x64DebugSymbolsPath)
-            })
-
-            doFirst {
-                xcFrameworkDest.deleteRecursively()
-            }
-        }
 
         register("publishDevFramework") {
             description = "Publish iOs framework to the Cocoa Repo"
@@ -129,10 +61,15 @@ kotlin {
                 commandLine("git", "checkout", "develop").standardOutput
             }
 
-            dependsOn("buildDebugXCFramework")
+            dependsOn("assemble${libName}DebugXCFramework")
 
-            // Replace
             doLast {
+
+                copy {
+                    from("$buildDir/XCFrameworks/debug")
+                    into("$rootDir/../kmp-xcframework-dest")
+                }
+
                 val dir = File("$rootDir/../kmp-xcframework-dest/$libName.podspec")
                 val tempFile = File("$rootDir/../kmp-xcframework-dest/$libName.podspec.new")
 
@@ -190,10 +127,16 @@ kotlin {
             }
 
             // Create Release Framework for Xcode
-            dependsOn("buildReleaseXCFramework")
+            dependsOn("assemble${libName}ReleaseXCFramework")
 
             // Replace
             doLast {
+
+                copy {
+                    from("$buildDir/XCFrameworks/release")
+                    into("$rootDir/../kmp-xcframework-dest")
+                }
+
                 val dir = File("$rootDir/../kmp-xcframework-dest/$libName.podspec")
                 val tempFile = File("$rootDir/../kmp-xcframework-dest/$libName.podspec.new")
 
