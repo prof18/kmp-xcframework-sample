@@ -8,5 +8,7 @@ The tasks can be replaced by the [KMP FatFramework Cocoa](https://github.com/pro
 An example of the usage can be found in the [build.gradle.kts](https://github.com/prof18/kmp-xcframework-sample/blob/with-plugin/build.gradle.kts)
 file of the [with-plugin branch](https://github.com/prof18/kmp-xcframework-sample/tree/with-plugin).
 
+For all the details, please refer to these articles: 
 
-For all the details, please refer to this article: [Coming Soon](https://www.marcogomiero.com/)
+- [How to build an XCFramework on Kotlin Multiplatform](https://www.marcogomiero.com/posts/2021/build-xcframework-kmp/)
+- [Building an XCFramework on Kotlin Multiplatform from Kotlin 1.5.30](https://www.marcogomiero.com/posts/2021/kmp-xcframework-official-support/)
