@@ -2,13 +2,11 @@
 
 A simple Kotlin Multiplatform sample project to show how to build an [XCFramework](https://help.apple.com/xcode/mac/11.4/#/dev544efab96)
 
-To build and publish the XCFramework, there are some custom Gradle tasks defined in the [build.gradle.kts](https://github.com/prof18/kmp-xcframework-sample/blob/main/build.gradle.kts) file.
+There are three branches:
 
-The tasks can be replaced by the [KMP FatFramework Cocoa](https://github.com/prof18/kmp-fatframework-cocoa) Gradle plugin. 
-An example of the usage can be found in the [build.gradle.kts](https://github.com/prof18/kmp-xcframework-sample/blob/with-plugin/build.gradle.kts)
-file of the [with-plugin branch](https://github.com/prof18/kmp-xcframework-sample/tree/with-plugin).
-
-This branch uses the official support for XCFramework that is landed with Kotlin 1.5.30
+- [kotlin-1.5.30](https://github.com/prof18/kmp-xcframework-sample/tree/kotlin-1.5.30): uses the official support for XCFramework that is landed with Kotlin 1.5.30
+- [pre-kotlin-1.5.30](https://github.com/prof18/kmp-xcframework-sample/tree/pre-kotlin-1.5.30): uses a version of Kotlin prior to 1.5.30. To build and publish the XCFramework, there are some custom Gradle tasks defined in the [build.gradle.kts](https://github.com/prof18/kmp-xcframework-sample/blob/main/build.gradle.kts) file.
+- [pre-kotlin-1.5.30-with-plugin](https://github.com/prof18/kmp-xcframework-sample/tree/pre-kotlin-1.5.30-with-plugin): uses a version of Kotlin prior to 1.5.30 and shows how the custom gradle tasks can be replaced by the [KMP FatFramework Cocoa](https://github.com/prof18/kmp-fatframework-cocoa) Gradle plugin. 
 
 For all the details, please refer to these articles: 
 
